@@ -1,0 +1,610 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   ROOT
+   ========================================================================== */
+
+:root {
+  --background: #ffffff;
+  --foreground: #1a1a1a;
+  --accent-primary: #dc2626;
+  --accent-primary-hover: #b91c1c;
+  --text-muted: #737373;
+  --border-light: #e5e5e5;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-manrope);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* ==========================================================================
+   BASE
+   ========================================================================== */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-manrope), system-ui, sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  image-rendering: auto;
+}
+
+hr {
+  border: none;
+  height: 1px;
+  background-color: #e5e7eb;
+  position: relative;
+  margin: 1.5rem 0;
+}
+
+hr.red-accent,
+.hr-red {
+  border: none;
+  height: 1px;
+  background-color: #e5e7eb;
+  position: relative;
+  margin: 1.5rem 0;
+}
+
+hr.red-accent::before,
+.hr-red::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 0;
+  height: 3px;
+  width: 60px;
+  background-color: #dc2626;
+  border-radius: 9999px;
+}
+
+::selection {
+  background: #0f172a;
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   ADMIN INPUT
+   ========================================================================== */
+
+.admin-input {
+  display: block;
+  width: 100%;
+  margin-top: 0.25rem;
+  border: 1px solid #d4d4d8;
+  border-radius: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  font-weight: 400;
+}
+
+.admin-input:focus {
+  outline: none;
+}
+
+.admin-error {
+  display: block;
+  margin-top: 0.25rem;
+  color: #b91c1c;
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.admin-help {
+  display: block;
+  margin-top: 0.25rem;
+  color: #64748b;
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+/* ==========================================================================
+   EDITOR
+   ========================================================================== */
+
+.editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+  border: 1px solid #1e293b;
+  border-bottom: 0;
+  border-radius: 0.75rem 0.75rem 0 0;
+  background: #0f172a;
+  padding: 0.65rem;
+}
+
+.editor-toolbar button {
+  min-width: 2rem;
+  border: 1px solid #334155;
+  border-radius: 0.4rem;
+  background: #1e293b;
+  padding: 0.35rem 0.6rem;
+  color: #cbd5e1;
+  font-size: 0.75rem;
+  font-weight: 700;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.editor-toolbar button:hover {
+  border-color: #e11d48;
+  background: #e11d48;
+  color: #ffffff;
+}
+
+.editor-toolbar button:active {
+  transform: scale(0.97);
+}
+
+.admin-editor {
+  margin-top: 0;
+  border-radius: 0 0 0.75rem 0.75rem;
+}
+
+.rich-editor {
+  min-height: 360px;
+  margin-top: 0;
+  overflow-y: auto;
+  border: 1px solid #1e293b;
+  border-radius: 0 0 0.75rem 0.75rem;
+  background: #020617;
+  padding: 1.25rem;
+  color: #f1f5f9;
+  font-size: 0.95rem;
+  line-height: 1.8;
+}
+
+.rich-editor:focus {
+  outline: none;
+  border-color: #e11d48;
+  box-shadow: 0 0 0 2px rgba(225, 29, 72, 0.25);
+}
+
+.rich-editor h1,
+.rich-editor h2,
+.rich-editor h3,
+.rich-editor h4,
+.rich-editor h5,
+.rich-editor h6 {
+  margin: 1.25rem 0 0.5rem;
+  color: #ffffff;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.rich-editor h1 {
+  font-size: 2rem;
+}
+
+.rich-editor h2 {
+  border-bottom: 1px solid #1e293b;
+  padding-bottom: 0.35rem;
+  font-size: 1.65rem;
+}
+
+.rich-editor h3 {
+  font-size: 1.35rem;
+}
+
+.rich-editor h4 {
+  font-size: 1.15rem;
+}
+
+.rich-editor h5 {
+  font-size: 1rem;
+}
+
+.rich-editor h6 {
+  color: #94a3b8;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+
+.rich-editor p {
+  margin: 0 0 1rem;
+}
+
+.rich-editor ul {
+  margin: 0.75rem 0;
+  padding-left: 1.5rem;
+  list-style: disc;
+}
+
+.rich-editor ol {
+  margin: 0.75rem 0;
+  padding-left: 1.5rem;
+  list-style: decimal;
+}
+
+.rich-editor li {
+  margin: 0.4rem 0;
+}
+
+.rich-editor blockquote {
+  margin: 1.25rem 0;
+  border-left: 3px solid #e11d48;
+  border-radius: 0 0.5rem 0.5rem 0;
+  background: rgba(225, 29, 72, 0.05);
+  padding: 0.5rem 1rem;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+.rich-editor pre {
+  overflow-x: auto;
+  margin: 1.25rem 0;
+  border: 1px solid #1e293b;
+  border-radius: 0.5rem;
+  background: #0b0f19;
+  padding: 0.85rem 1.15rem;
+  color: #e2e8f0;
+  font-family: monospace;
+  font-size: 0.85rem;
+}
+
+/* ==========================================================================
+   NEWS PROSE
+   ========================================================================== */
+
+.news-prose {
+  max-width: 760px;
+  color: #334155;
+  font-size: 1.08rem;
+  line-height: 1.9;
+}
+
+.news-prose p {
+  margin: 0 0 1.5rem;
+}
+
+.news-prose h1,
+.news-prose h2,
+.news-prose h3,
+.news-prose h4,
+.news-prose h5,
+.news-prose h6 {
+  color: #0f172a;
+  font-weight: 800;
+}
+
+.news-prose h1 {
+  margin: 2.5rem 0 1rem;
+  font-size: 2.15rem;
+  line-height: 1.2;
+}
+
+.news-prose h2 {
+  margin: 3rem 0 1rem;
+  font-size: 1.8rem;
+  line-height: 1.25;
+}
+
+.news-prose h3 {
+  margin: 2.25rem 0 0.75rem;
+  font-size: 1.35rem;
+  line-height: 1.3;
+}
+
+.news-prose h4 {
+  margin: 1.75rem 0 0.65rem;
+  font-size: 1.15rem;
+  line-height: 1.35;
+}
+
+.news-prose h5 {
+  margin: 1.5rem 0 0.5rem;
+  color: #334155;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.news-prose h6 {
+  margin: 1.25rem 0 0.5rem;
+  color: #64748b;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.news-prose strong {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.news-prose ul {
+  margin: 0 0 1.5rem;
+  padding-left: 1.5rem;
+  list-style: disc;
+}
+
+.news-prose ol {
+  margin: 0 0 1.5rem;
+  padding-left: 1.5rem;
+  list-style: decimal;
+}
+
+.news-prose li {
+  margin: 0.45rem 0;
+  padding-left: 0.25rem;
+}
+
+.news-prose blockquote {
+  margin: 2rem 0;
+  border-left: 3px solid #d4af37;
+  padding: 0.25rem 0 0.25rem 1.25rem;
+  color: #475569;
+  font-size: 1.2rem;
+  font-style: italic;
+}
+
+.news-prose pre {
+  overflow-x: auto;
+  margin: 2rem 0;
+  border-radius: 0.75rem;
+  background: #172033;
+  padding: 1rem 1.25rem;
+  color: #e2e8f0;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.news-prose img {
+  width: 100%;
+  margin: 2rem 0;
+  border-radius: 0.75rem;
+}
+
+.news-prose a {
+  color: #e11d48;
+  text-decoration: underline;
+  text-decoration-color: rgba(225, 29, 72, 0.25);
+  text-underline-offset: 3px;
+}
+
+.news-prose a:hover {
+  text-decoration-color: #e11d48;
+}
+
+/* ==========================================================================
+   SHARE BUTTON
+   ========================================================================== */
+
+.share-button {
+  display: inline-flex;
+  width: 2.25rem;
+  height: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e2e8f0;
+  border-radius: 9999px;
+  background: #ffffff;
+  color: #64748b;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease,
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.share-button:hover {
+  border-color: #d4af37;
+  background: #fff8e5;
+  color: #8a6412;
+  transform: translateY(-1px);
+}
+
+.share-button:active {
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   UTILITY
+   ========================================================================== */
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* ==========================================================================
+   GENERIC ANIMATIONS
+   ========================================================================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-in {
+  animation-duration: 150ms;
+  animation-fill-mode: both;
+  animation-timing-function: ease-out;
+}
+
+.fade-in {
+  animation-name: fadeIn;
+}
+
+.slide-in-from-top-2 {
+  animation-name: slideInFromTop;
+}
+
+.zoom-in-95 {
+  animation-name: zoomIn;
+}
+
+/* ==========================================================================
+   FEATURED HERO
+   ========================================================================== */
+
+/* Dikey çizginin yukarıdan aşağı açılması */
+@keyframes featuredBorderReveal {
+  0% {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+/* Başlığın çizginin içinden çıkması */
+@keyframes featuredTitleFromBorder {
+  0% {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-featured-border {
+  transform-origin: top center;
+  animation: featuredBorderReveal
+    0.45s
+    cubic-bezier(0.22, 1, 0.36, 1)
+    both;
+}
+
+.animate-featured-title {
+  opacity: 0;
+  animation: featuredTitleFromBorder
+    0.7s
+    cubic-bezier(0.22, 1, 0.36, 1)
+    0.25s
+    both;
+}
+
+/* ==========================================================================
+   FEATURED CARDS
+   ========================================================================== */
+
+@keyframes featuredCardIn {
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   REDUCE MOTION
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .animate-featured-border,
+  .animate-featured-title,
+  .featured-card-in {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ==========================================================================
+   MOBILE NEWS
+   ========================================================================== */
+
+@media (max-width: 640px) {
+  .news-prose {
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .news-prose h1 {
+    font-size: 1.8rem;
+  }
+
+  .news-prose h2 {
+    font-size: 1.5rem;
+  }
+
+  .news-prose h3 {
+    font-size: 1.2rem;
+  }
+}

@@ -1,0 +1,44 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="728" height="90" viewBox="0 0 728 90" fill="none">
+  <defs>
+    <linearGradient id="bg_lead" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b0f19"/>
+      <stop offset="50%" stop-color="#111827"/>
+      <stop offset="100%" stop-color="#1e1b4b"/>
+    </linearGradient>
+    <linearGradient id="btn_lead" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2563eb"/>
+      <stop offset="100%" stop-color="#4f46e5"/>
+    </linearGradient>
+    <radialGradient id="glow_lead" cx="80%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#6366f1" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#6366f1" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Arka Plan -->
+  <rect width="728" height="90" rx="8" fill="url(#bg_lead)"/>
+  <circle cx="620" cy="45" r="90" fill="url(#glow_lead)"/>
+
+  <!-- Kenarlık -->
+  <rect x="0.5" y="0.5" width="727" height="89" rx="7.5" stroke="#374151" stroke-opacity="0.6"/>
+
+  <!-- Logo İkonu -->
+  <g transform="translate(20, 22)">
+    <rect width="46" height="46" rx="10" fill="#1f2937" stroke="#4f46e5" stroke-width="1.5"/>
+    <path d="M23 13L33 19V31L23 37L13 31V19L23 13Z" stroke="#60a5fa" stroke-width="2" fill="#3b82f6" fill-opacity="0.2"/>
+    <circle cx="23" cy="25" r="4" fill="#60a5fa"/>
+  </g>
+
+  <!-- Metin Alanı -->
+  <g transform="translate(80, 24)">
+    <text x="0" y="16" fill="#60a5fa" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" letter-spacing="1">GOOGLE CLOUD • VERTEX AI</text>
+    <text x="0" y="36" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="15" font-weight="700">Yapay Zeka Modellerinizi Kurumsal Güvenlikle Devreye Alın</text>
+    <text x="0" y="52" fill="#9ca3af" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11">İlk 90 gün boyunca $300 ücretsiz deneme kredisi kazanın.</text>
+  </g>
+
+  <!-- CTA Buton -->
+  <g transform="translate(560, 28)">
+    <rect width="144" height="34" rx="6" fill="url(#btn_lead)"/>
+    <text x="72" y="22" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="700" text-anchor="middle">Hemen Başlayın ➔</text>
+  </g>
+</svg>
