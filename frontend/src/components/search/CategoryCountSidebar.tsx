@@ -24,7 +24,10 @@ export default function CategoryCountSidebar({
 
     setSubStatus("loading");
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
+      const apiUrl =
+        process.env.NEXT_PUBLIC_API_URL && !process.env.NEXT_PUBLIC_API_URL.includes("localhost:8000")
+          ? process.env.NEXT_PUBLIC_API_URL
+          : "/api";
       const res = await fetch(`${apiUrl}/newsletter/subscribe`, {
         method: "POST",
         headers: {
