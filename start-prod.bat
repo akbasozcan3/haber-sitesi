@@ -1,4 +1,4 @@
-﻿@ECHO OFF
+@ECHO OFF
 TITLE WebHaber - Production Server
 ECHO.
 ECHO ===================================================
@@ -13,10 +13,10 @@ IF NOT EXIST backend\.env (
 
 ECHO [1/3] Backend storage baglantisi kontrol ediliyor...
 cd /d %~dp0backend
-C:\php85\php.exe artisan storage:link >NUL 2>&1
+C:\Users\ozcan\php85\php.exe artisan storage:link >NUL 2>&1
 
 ECHO [2/3] Backend API sunucusu baslatiliyor (port 8000)...
-START "WebHaber API (Prod)" cmd /k "cd /d %~dp0backend && C:\php85\php.exe artisan serve --host=0.0.0.0 --port=8000"
+START "WebHaber API (Prod)" cmd /k "cd /d %~dp0backend && C:\Users\ozcan\php85\php.exe artisan serve --host=0.0.0.0 --port=8000"
 TIMEOUT /T 2 /NOBREAK > NUL
 
 ECHO [3/3] Frontend sunucusu baslatiliyor (port 3000)...

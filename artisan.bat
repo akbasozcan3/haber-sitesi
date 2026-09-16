@@ -1,2 +1,2 @@
 @echo off
-C:\php85\php.exe %~dp0backend\artisan %*
+C:\Users\ozcan\php85\php.exe %~dp0backend\artisan %*
