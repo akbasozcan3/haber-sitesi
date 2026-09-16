@@ -60,12 +60,12 @@ export const DEFAULT_AUTHORS: Author[] = [
 ];
 
 export const DEFAULT_SETTINGS: SiteSettings = {
-  site_logo: "/icon.png",
-  site_logo_type: "text",
-  site_logo_height: "40",
+  site_logo: "/logo.png",
+  site_logo_type: "image",
+  site_logo_height: "94",
   site_favicon: "/icon.png",
   site_title: "Zernews",
-  site_tagline: "Teknoloji, Yapay Zeka & Girişim Ekosistemi",
+  site_tagline: "Teknoloji ve Girişim Ekosistemi",
   site_description: "Zernews - Türkiye ve küresel teknoloji ekosistemine odaklı en güncel yapay zeka, girişimcilik, fintek ve yatırım haberleri.",
   ads_enabled: "1",
   adsense_client: "ca-pub-4161709832087107",

@@ -11,12 +11,17 @@ interface SiteLogoProps {
 }
 
 export function formatLogoUrl(url: string | null | undefined): string {
-  if (!url) return "";
+  if (!url) return "/logo.png";
   const trimmed = url.trim();
-  if (!trimmed) return "";
+  if (!trimmed) return "/logo.png";
 
-  if (trimmed.startsWith("data:") || trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
-    return trimmed;
+  // Tarayıcı HTTPS üzerindeyse ve URL http://localhost/ ise Mixed Content hatasını önlemek için yerel /logo.png kullan
+  if (
+    typeof window !== "undefined" &&
+    window.location.protocol === "https:" &&
+    (trimmed.includes("localhost") || trimmed.includes("127.0.0.1"))
+  ) {
+    return "/logo.png";
   }
 
   return trimmed;
@@ -30,24 +35,20 @@ export default function SiteLogo({
 }: SiteLogoProps) {
   const { settings, loading } = useSiteSettings();
   const [imgError, setImgError] = useState(false);
-  const [triedFallback, setTriedFallback] = useState(false);
 
-  const rawLogo = settings.site_logo;
-  const configuredHeight = Number(settings.site_logo_height) || 52;
+  const rawLogo = settings.site_logo || "/logo.png";
+  const configuredHeight = Number(settings.site_logo_height) || 94;
   const targetHeight = height !== undefined ? height : configuredHeight;
 
-  const formattedUrl = formatLogoUrl(rawLogo);
-  const apiBase = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api").replace(/\/api\/?$/, "");
-  const activeSrc = triedFallback
-    ? (formattedUrl.startsWith("/") ? `${apiBase}${formattedUrl}` : formattedUrl)
-    : formattedUrl;
+  const [activeSrc, setActiveSrc] = useState(formatLogoUrl(rawLogo));
+
   useEffect(() => {
+    setActiveSrc(formatLogoUrl(rawLogo));
     setImgError(false);
-    setTriedFallback(false);
   }, [rawLogo]);
 
   // LOGO RESMİ VARSA SADECE RESİM GÖSTERİLİR (KESİNLİKLE YAZI YOK)
-  if (rawLogo && activeSrc && !imgError) {
+  if (activeSrc && !imgError) {
     return (
       <span suppressHydrationWarning className={`inline-flex items-center ${className}`}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -56,8 +57,8 @@ export default function SiteLogo({
           src={activeSrc}
           alt={settings.site_title || "Site Logosu"}
           onError={() => {
-            if (!triedFallback && activeSrc.startsWith("/")) {
-              setTriedFallback(true);
+            if (activeSrc !== "/logo.png") {
+              setActiveSrc("/logo.png");
             } else {
               setImgError(true);
             }

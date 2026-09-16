@@ -3,24 +3,9 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { settingsApi } from "@/lib/istemci";
 import type { SiteSettings } from "@/types/uygulama";
+import { DEFAULT_SETTINGS } from "@/types/uygulama";
 
 const STORAGE_KEY = "zernews_cached_settings";
-
-const DEFAULT_SETTINGS: SiteSettings = {
-  site_logo: "",
-  site_logo_type: "image",
-  site_logo_height: 52,
-  site_favicon: "/storage/logos/favicon_default.png",
-  site_title: "Zernews",
-  site_tagline: "Teknoloji ve Girişim Ekosistemi",
-  ads_enabled: "1",
-  adsense_client: "ca-pub-4161709832087107",
-  adsense_slot_header: "",
-  adsense_slot_billboard: "",
-  adsense_slot_sidebar: "",
-  adsense_slot_article: "",
-  ad_mode: "auto",
-};
 
 interface SiteSettingsContextType {
   settings: SiteSettings;
