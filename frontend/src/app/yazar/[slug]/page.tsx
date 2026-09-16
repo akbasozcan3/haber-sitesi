@@ -2,11 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
-  getAuthorBySlug,
-  getNewsByAuthor,
-  getCategories,
-  getPublicNews,
-} from "@/lib/api/haberler";
+  fetchAuthorBySlugFromMongo,
+  fetchNewsFromMongo,
+  fetchCategoriesFromMongo,
+} from "@/lib/mongoService";
 import NewsCard from "@/components/news/NewsCard";
 import KategoriSidebar from "@/components/home/KategoriSidebar";
 import { ChevronRight, Newspaper, Mail } from "lucide-react";
@@ -17,7 +16,7 @@ type PageProps = {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const author = await getAuthorBySlug(slug);
+  const author = await fetchAuthorBySlugFromMongo(slug);
   if (!author) return { title: "Yazar Bulunamadı" };
   return {
     title: `${author.name} - Yazarın Haberleri`,
@@ -31,9 +30,9 @@ export default async function YazarPage({ params }: PageProps) {
   const { slug } = await params;
 
   const [author, news, categories] = await Promise.all([
-    getAuthorBySlug(slug),
-    getNewsByAuthor(slug),
-    getCategories(),
+    fetchAuthorBySlugFromMongo(slug),
+    fetchNewsFromMongo({ author: slug, status: "published" }),
+    fetchCategoriesFromMongo(),
   ]);
 
   if (!author) notFound();
@@ -43,7 +42,7 @@ export default async function YazarPage({ params }: PageProps) {
   // Sidebar: tüm kategorilerden haberler
   const sidebarGroups = await Promise.all(
     categories.slice(0, 4).map(async (cat) => {
-      const catNews = await getPublicNews({ category: cat.slug, status: "published", limit: 3 });
+      const catNews = await fetchNewsFromMongo({ category: cat.slug, status: "published", limit: 3 });
       return { category: cat, news: catNews };
     })
   );

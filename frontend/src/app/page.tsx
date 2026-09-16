@@ -1,23 +1,27 @@
 import {
-  getPublicNews,
-  getCategories,
-  getAuthors,
-} from "@/lib/api/haberler";
+  fetchNewsFromMongo,
+  fetchCategoriesFromMongo,
+  fetchAuthorsFromMongo,
+} from "@/lib/mongoService";
+import { DEFAULT_CATEGORIES, DEFAULT_AUTHORS, DEFAULT_NEWS } from "@/types/uygulama";
 import CategoryBlock from "@/components/home/CategoryBlock";
 import AuthorsSection from "@/components/home/AuthorsSection";
 import FeaturedHero from "@/components/home/FeaturedHero";
 import LatestNewsSection from "@/components/home/LatestNewsSection";
 import AdBanner from "@/components/ads/AdBanner";
 
-
 export const dynamic = "force-dynamic";
 
 export default async function AnaSayfa() {
-  const [allNews, categories, authors] = await Promise.all([
-    getPublicNews({ status: "published", limit: 30 }),
-    getCategories(),
-    getAuthors(),
+  const [mongoNews, mongoCategories, mongoAuthors] = await Promise.all([
+    fetchNewsFromMongo({ status: "published", limit: 30 }),
+    fetchCategoriesFromMongo(),
+    fetchAuthorsFromMongo(),
   ]);
+
+  const allNews = mongoNews && mongoNews.length > 0 ? mongoNews : DEFAULT_NEWS;
+  const categories = mongoCategories && mongoCategories.length > 0 ? mongoCategories : DEFAULT_CATEGORIES;
+  const authors = mongoAuthors && mongoAuthors.length > 0 ? mongoAuthors : DEFAULT_AUTHORS;
 
   // 1. Manşet (Hero Slider): Öncelikle öne çıkarılmışlar (is_featured), toplam 4 haber
   const featuredOnly = allNews.filter((n) => n.is_featured);
@@ -66,7 +70,7 @@ export default async function AnaSayfa() {
       if (fromPool && fromPool.length >= 2) {
         return fromPool;
       }
-      const fetched = await getPublicNews({ category: cat.slug, status: "published", limit: 3 });
+      const fetched = await fetchNewsFromMongo({ category: cat.slug, status: "published", limit: 3 });
       return fetched.length > 0 ? fetched : (fromPool ?? []);
     })
   );

@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import HaberlerArticle from "@/components/haberler/HaberlerArticle";
-import { getNewsBySlug, getPublicNews, getCategories } from "@/lib/api/haberler";
+import {
+  fetchNewsBySlugFromMongo,
+  fetchNewsFromMongo,
+  fetchCategoriesFromMongo,
+} from "@/lib/mongoService";
 import type { News } from "@/types/uygulama";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
@@ -14,7 +18,7 @@ type PageProps = {
 export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const resolvedSearchParams = searchParams ? await searchParams : {};
-  const news = await getNewsBySlug(slug);
+  const news = await fetchNewsBySlugFromMongo(slug);
   if (!news) return { title: "Haber bulunamadı" };
 
   // SEO Kuralı: Çok sayfalı makalelerde canonical URL her zaman ana haberi (/haberler/[slug]) işaret etmelidir.
@@ -51,7 +55,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
 export default async function NewsDetailPage({ params, searchParams }: PageProps) {
   const { slug } = await params;
   const resolvedSearchParams = searchParams ? await searchParams : {};
-  const news = await getNewsBySlug(slug);
+  const news = await fetchNewsBySlugFromMongo(slug);
   if (!news) notFound();
 
   const sayfa = resolvedSearchParams?.sayfa ? parseInt(resolvedSearchParams.sayfa, 10) : 1;
@@ -59,9 +63,9 @@ export default async function NewsDetailPage({ params, searchParams }: PageProps
 
   // Tüm haberler + kategoriler paralel çek
   const [allNewsRaw, categories, featuredNews] = await Promise.all([
-    getPublicNews(),
-    getCategories(),
-    getPublicNews({ featured: 1, status: "published", limit: 5 }),
+    fetchNewsFromMongo(),
+    fetchCategoriesFromMongo(),
+    fetchNewsFromMongo({ featured: 1, status: "published", limit: 5 }),
   ]);
 
   const allNews: News[] = allNewsRaw ?? [];
@@ -77,7 +81,7 @@ export default async function NewsDetailPage({ params, searchParams }: PageProps
 
   const sidebarGroups = await Promise.all(
     sortedCategories.map(async (cat) => {
-      const catNews = await getPublicNews({ category: cat.slug, status: "published", limit: 3 });
+      const catNews = await fetchNewsFromMongo({ category: cat.slug, status: "published", limit: 3 });
       // Mevcut haberi sidebar listesinden çıkar
       const filtered = (catNews ?? []).filter((n) => n.id !== news.id);
       // Kategoride tek haber varsa sidebar boş kalmasın; API'den gelen mevcut haberi göster.

@@ -7,6 +7,7 @@ const backendStorageUrl = (
 ).replace(/\/api\/?$/, "");
 
 const nextConfig: NextConfig = {
+  serverExternalPackages: ["mongodb"],
   images: {
     unoptimized: true,
     remotePatterns: [

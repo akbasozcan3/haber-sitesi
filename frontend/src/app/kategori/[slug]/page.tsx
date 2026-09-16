@@ -2,11 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
-  getCategoryBySlug,
-  getNewsByCategory,
-  getCategories,
-  getPublicNews,
-} from "@/lib/api/haberler";
+  fetchCategoryBySlugFromMongo,
+  fetchNewsFromMongo,
+  fetchCategoriesFromMongo,
+} from "@/lib/mongoService";
 import NewsCard from "@/components/news/NewsCard";
 import KategoriSidebar from "@/components/home/KategoriSidebar";
 import { ChevronRight } from "lucide-react";
@@ -17,7 +16,7 @@ type PageProps = {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const category = await getCategoryBySlug(slug);
+  const category = await fetchCategoryBySlugFromMongo(slug);
   if (!category) return { title: "Kategori Bulunamadı" };
   return {
     title: `${category.name} Haberleri`,
@@ -29,9 +28,9 @@ export default async function KategoriPage({ params }: PageProps) {
   const { slug } = await params;
 
   const [category, news, categories] = await Promise.all([
-    getCategoryBySlug(slug),
-    getNewsByCategory(slug),
-    getCategories(),
+    fetchCategoryBySlugFromMongo(slug),
+    fetchNewsFromMongo({ category: slug, status: "published" }),
+    fetchCategoriesFromMongo(),
   ]);
 
   if (!category) notFound();
@@ -42,7 +41,7 @@ export default async function KategoriPage({ params }: PageProps) {
   const otherCategories = categories.filter((c) => c.slug !== slug).slice(0, 4);
   const sidebarGroups = await Promise.all(
     otherCategories.map(async (cat) => {
-      const catNews = await getPublicNews({ category: cat.slug, status: "published", limit: 3 });
+      const catNews = await fetchNewsFromMongo({ category: cat.slug, status: "published", limit: 3 });
       return { category: cat, news: catNews };
     })
   );

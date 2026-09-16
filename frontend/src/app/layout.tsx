@@ -6,6 +6,7 @@ import "./globals.css";
 import SiteLayout from "@/components/layout/SiteLayout";
 import type { Category, SiteSettings } from "@/types/uygulama";
 import { DEFAULT_CATEGORIES, DEFAULT_SETTINGS } from "@/types/uygulama";
+import { fetchSettingsFromMongo, fetchCategoriesFromMongo } from "@/lib/mongoService";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -20,47 +21,24 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
 export const dynamic = "force-dynamic";
 
 async function getInitialLayoutData(): Promise<{
   settings?: SiteSettings;
   categories: Category[];
 }> {
-  let settings: SiteSettings = DEFAULT_SETTINGS;
-  let categories: Category[] = DEFAULT_CATEGORIES;
-
-  // Cloud/Vercel ortamında localhost API aranamayacağından gereksiz asılı kalmayı (timeout) önle
-  const isCloudServer =
-    typeof window === "undefined" &&
-    Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.NODE_ENV === "production") &&
-    (API_URL.includes("localhost") || API_URL.includes("127.0.0.1") || API_URL.includes("0.0.0.0"));
-
-  if (!isCloudServer) {
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 2500);
-
-      const [settingsRes, categoriesRes] = await Promise.allSettled([
-        fetch(`${API_URL}/settings`, { cache: "no-store", signal: controller.signal }),
-        fetch(`${API_URL}/categories`, { cache: "no-store", signal: controller.signal }),
-      ]);
-
-      clearTimeout(timeoutId);
-
-      if (settingsRes.status === "fulfilled" && settingsRes.value.ok) {
-        const data = await settingsRes.value.json().catch(() => null);
-        if (data?.settings) settings = { ...DEFAULT_SETTINGS, ...data.settings };
-      }
-      if (categoriesRes.status === "fulfilled" && categoriesRes.value.ok) {
-        const data = await categoriesRes.value.json().catch(() => null);
-        const list = Array.isArray(data?.data) ? data.data : Array.isArray(data) ? data : [];
-        if (list.length > 0) categories = list;
-      }
-    } catch {}
+  try {
+    const [settings, categories] = await Promise.all([
+      fetchSettingsFromMongo(),
+      fetchCategoriesFromMongo(),
+    ]);
+    return {
+      settings: settings || DEFAULT_SETTINGS,
+      categories: categories && categories.length > 0 ? categories : DEFAULT_CATEGORIES,
+    };
+  } catch {
+    return { settings: DEFAULT_SETTINGS, categories: DEFAULT_CATEGORIES };
   }
-
-  return { settings, categories };
 }
 
 export async function generateMetadata(): Promise<Metadata> {

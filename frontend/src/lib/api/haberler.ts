@@ -1,7 +1,7 @@
 import type { Author, Category, News, NewsFilterParams } from "@/types/uygulama";
 import { DEFAULT_CATEGORIES, DEFAULT_AUTHORS, DEFAULT_NEWS } from "@/types/uygulama";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "/api";
 
 type ResourceResponse<T> = { data: T };
 
