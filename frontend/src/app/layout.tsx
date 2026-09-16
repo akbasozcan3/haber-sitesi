@@ -5,6 +5,7 @@ import { Manrope, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import SiteLayout from "@/components/layout/SiteLayout";
 import type { Category, SiteSettings } from "@/types/uygulama";
+import { DEFAULT_CATEGORIES, DEFAULT_SETTINGS } from "@/types/uygulama";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -26,24 +27,38 @@ async function getInitialLayoutData(): Promise<{
   settings?: SiteSettings;
   categories: Category[];
 }> {
-  let settings: SiteSettings | undefined;
-  let categories: Category[] = [];
+  let settings: SiteSettings = DEFAULT_SETTINGS;
+  let categories: Category[] = DEFAULT_CATEGORIES;
 
-  try {
-    const [settingsRes, categoriesRes] = await Promise.allSettled([
-      fetch(`${API_URL}/settings`, { cache: "no-store" }),
-      fetch(`${API_URL}/categories`, { cache: "no-store" }),
-    ]);
+  // Cloud/Vercel ortamında localhost API aranamayacağından gereksiz asılı kalmayı (timeout) önle
+  const isCloudServer =
+    typeof window === "undefined" &&
+    Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.NODE_ENV === "production") &&
+    (API_URL.includes("localhost") || API_URL.includes("127.0.0.1") || API_URL.includes("0.0.0.0"));
 
-    if (settingsRes.status === "fulfilled" && settingsRes.value.ok) {
-      const data = await settingsRes.value.json();
-      settings = data.settings;
-    }
-    if (categoriesRes.status === "fulfilled" && categoriesRes.value.ok) {
-      const data = await categoriesRes.value.json();
-      categories = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
-    }
-  } catch {}
+  if (!isCloudServer) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2500);
+
+      const [settingsRes, categoriesRes] = await Promise.allSettled([
+        fetch(`${API_URL}/settings`, { cache: "no-store", signal: controller.signal }),
+        fetch(`${API_URL}/categories`, { cache: "no-store", signal: controller.signal }),
+      ]);
+
+      clearTimeout(timeoutId);
+
+      if (settingsRes.status === "fulfilled" && settingsRes.value.ok) {
+        const data = await settingsRes.value.json().catch(() => null);
+        if (data?.settings) settings = { ...DEFAULT_SETTINGS, ...data.settings };
+      }
+      if (categoriesRes.status === "fulfilled" && categoriesRes.value.ok) {
+        const data = await categoriesRes.value.json().catch(() => null);
+        const list = Array.isArray(data?.data) ? data.data : Array.isArray(data) ? data : [];
+        if (list.length > 0) categories = list;
+      }
+    } catch {}
+  }
 
   return { settings, categories };
 }
@@ -85,31 +100,6 @@ export async function generateMetadata(): Promise<Metadata> {
       "google-adsense-account": settings?.adsense_client?.trim() || "ca-pub-4161709832087107",
     },
   };
-}
-
-// Next.js 16 Turbopack negative timestamp koruması (Server tarafı)
-if (typeof globalThis !== "undefined" && globalThis.performance && typeof globalThis.performance.measure === "function") {
-  const origMeasure = globalThis.performance.measure.bind(globalThis.performance);
-  const perfObj = globalThis.performance as unknown as Record<string, unknown>;
-  if (!perfObj.__patched_for_negative_timestamp) {
-    perfObj.__patched_for_negative_timestamp = true;
-    globalThis.performance.measure = function (name: string, startOrOptions?: unknown, endMark?: string) {
-      try {
-        if (typeof startOrOptions === "object" && startOrOptions !== null) {
-          const opts = { ...(startOrOptions as Record<string, unknown>) };
-          if (typeof opts.start === "number" && opts.start < 0) opts.start = 0;
-          if (typeof opts.end === "number" && opts.end < 0) opts.end = 0;
-          if (typeof opts.start === "number" && typeof opts.end === "number" && (opts.end as number) < (opts.start as number)) {
-            opts.end = opts.start;
-          }
-          return origMeasure(name, opts as unknown as PerformanceMeasureOptions, endMark);
-        }
-        return origMeasure(name, startOrOptions as PerformanceMeasureOptions, endMark);
-      } catch {
-        return undefined as unknown as PerformanceMeasure;
-      }
-    };
-  }
 }
 
 export default async function RootLayout({ children }: { children: ReactNode }) {

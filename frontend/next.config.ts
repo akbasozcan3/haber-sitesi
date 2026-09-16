@@ -19,6 +19,14 @@ const nextConfig: NextConfig = {
     ],
   },
   async rewrites() {
+    const isLocal =
+      backendStorageUrl.includes("localhost") ||
+      backendStorageUrl.includes("127.0.0.1");
+
+    if (process.env.VERCEL && isLocal) {
+      return [];
+    }
+
     return [
       {
         source: "/storage/:path*",
