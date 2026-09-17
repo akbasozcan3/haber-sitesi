@@ -3,8 +3,12 @@ import { getDatabase } from "@/lib/mongodb";
 import bcrypt from "bcryptjs";
 
 export async function POST(req: NextRequest) {
+  let email = "";
+  let password = "";
   try {
-    const { email, password } = await req.json();
+    const body = await req.json();
+    email = body.email;
+    password = body.password;
 
     if (!email || !password) {
       return NextResponse.json({ message: "E-posta ve şifre zorunludur." }, { status: 422 });

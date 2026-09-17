@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDatabase } from "@/lib/mongodb";
 
 export async function GET(req: NextRequest) {
+  let payload: { email?: string; id?: any } | null = null;
   try {
     const authHeader = req.headers.get("Authorization");
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -9,7 +10,6 @@ export async function GET(req: NextRequest) {
     }
 
     const token = authHeader.replace("Bearer ", "").trim();
-    let payload: { email?: string } | null = null;
     try {
       payload = JSON.parse(Buffer.from(token, "base64").toString("utf-8"));
     } catch {
