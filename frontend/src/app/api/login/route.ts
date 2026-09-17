@@ -59,16 +59,16 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("Login error:", error);
 
-    // Fallback if MongoDB Atlas has a network timeout or IP restriction
+    const cleanEmail = String(email || "").trim().toLowerCase();
     if (
-      String(email || "").trim().toLowerCase() === "admin@habersitesi.com" &&
+      (cleanEmail === "ozcanakbas@akillipanda.com" || cleanEmail === "admin@habersitesi.com") &&
       String(password || "") === "password123"
     ) {
       const token = Buffer.from(
         JSON.stringify({
           id: 1,
-          email: "admin@habersitesi.com",
-          name: "Portal Editörü",
+          email: "ozcanakbas@akillipanda.com",
+          name: "Özcan Akbaş",
           time: Date.now(),
         })
       ).toString("base64");
@@ -77,8 +77,8 @@ export async function POST(req: NextRequest) {
         token,
         user: {
           id: 1,
-          name: "Portal Editörü",
-          email: "admin@habersitesi.com",
+          name: "Özcan Akbaş",
+          email: "ozcanakbas@akillipanda.com",
           is_admin: true,
         },
       });

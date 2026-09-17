@@ -91,7 +91,7 @@ export default function AdminLoginPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@habersitesi.com"
+                  placeholder="ozcanakbas@akillipanda.com"
                   className="w-full rounded-xl border border-slate-800 bg-slate-950/80 py-3 pl-10 pr-4 text-xs font-medium text-white placeholder-slate-600 transition-all focus:border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500/40"
                 />
               </div>

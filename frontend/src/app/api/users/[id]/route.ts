@@ -86,7 +86,11 @@ export async function DELETE(
     const col = db.collection<any>("users");
 
     const user = await col.findOne(buildUserIdFilter(id));
-    if (user?.email === "admin@habersitesi.com") {
+    if (
+      user?.email === "ozcanakbas@akillipanda.com" ||
+      user?.email === "admin@habersitesi.com" ||
+      user?._id === 1
+    ) {
       return NextResponse.json(
         { message: "Ana yönetici hesabı silinemez." },
         { status: 403 }
