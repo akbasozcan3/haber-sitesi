@@ -36,10 +36,10 @@ export default function Error({
           </p>
           
           {/* Butonlar */}
-          <div className="flex flex-col gap-3 sm:flex-row sm:gap-2">
+          <div className="flex flex-col sm:flex-row gap-3 items-center justify-center">
             <button
               onClick={reset}
-              className="flex items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 py-3 text-sm font-bold text-white hover:bg-slate-800 transition-colors"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 px-6 py-3 text-sm font-bold text-white hover:bg-slate-800 transition-colors shadow-xs active:scale-95 cursor-pointer"
             >
               <RotateCcw className="h-4 w-4" />
               <span>Tekrar Dene</span>
@@ -47,7 +47,7 @@ export default function Error({
             
             <Link
               href="/"
-              className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-6 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors shadow-xs active:scale-95"
             >
               <Home className="h-4 w-4" />
               <span>Ana Sayfa</span>

@@ -133,12 +133,24 @@ export const authorsApi = {
 };
 
 export const usersApi = {
-  list: async (): Promise<User[]> => request<User[]>("/users"),
-  get: async (id: number | string): Promise<User> => request<User>(`/users/${id}`),
-  create: async (data: { name: string; email: string; password: string }): Promise<User> =>
-    request<User>("/users", { method: "POST", json: data }),
-  update: async (id: number | string, data: { name?: string; email?: string; password?: string }): Promise<User> =>
-    request<User>(`/users/${id}`, { method: "PUT", json: data }),
+  list: async (): Promise<User[]> => {
+    const res = await request<any>("/users");
+    if (Array.isArray(res)) return res;
+    if (res && Array.isArray(res.data)) return res.data;
+    return [];
+  },
+  get: async (id: number | string): Promise<User> => {
+    const res = await request<any>(`/users/${id}`);
+    return res?.data || res;
+  },
+  create: async (data: { name: string; email: string; password: string }): Promise<User> => {
+    const res = await request<any>("/users", { method: "POST", json: data });
+    return res?.data || res;
+  },
+  update: async (id: number | string, data: { name?: string; email?: string; password?: string }): Promise<User> => {
+    const res = await request<any>(`/users/${id}`, { method: "PUT", json: data });
+    return res?.data || res;
+  },
   remove: (id: number | string): Promise<void> => request(`/users/${id}`, { method: "DELETE" }),
 };
 

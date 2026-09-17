@@ -32,7 +32,7 @@ export default function UsersPage() {
   function load() {
     setLoading(true);
     usersApi.list()
-      .then(setItems)
+      .then((data) => setItems(Array.isArray(data) ? data : []))
       .catch(e => setError(e instanceof ApiError ? e.message : "Kullanıcılar yüklenemedi."))
       .finally(() => setLoading(false));
   }
