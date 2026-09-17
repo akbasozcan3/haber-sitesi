@@ -104,11 +104,10 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <link rel="shortcut icon" href={faviconUrl} />
         <link rel="apple-touch-icon" href={faviconUrl} />
         {settings?.ads_enabled !== "0" && settings?.ads_enabled !== false && (
-          <Script
+          <script
             async
             src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${settings?.adsense_client?.trim() || "ca-pub-4161709832087107"}`}
             crossOrigin="anonymous"
-            strategy="afterInteractive"
           />
         )}
       </head>
